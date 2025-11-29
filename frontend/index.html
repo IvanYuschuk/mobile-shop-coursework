@@ -71,12 +71,25 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold small">Стан</label>
+              <label class="form-label fw-bold small">Категорія товару</label>
               <select class="form-select form-select-sm" id="condition-filter">
-                <option value="all" selected>Всі варіанти</option>
-                <option value="NewPhone">Тільки нові</option>
-                <option value="UsedPhone">Тільки Б/У</option>
+                <option value="all" selected>📦 Всі товари</option>
+                <option disabled>--- Телефони ---</option>
+                <option value="NewPhone">📱 Нові смартфони</option>
+                <option value="UsedPhone">♻️ Б/У смартфони</option>
+                <option disabled>--- Інше ---</option>
+                <option value="Accessory">🎧 Аксесуари</option>
+                <option value="Service">🛠 Послуги сервісу</option>
               </select>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Ціна (грн)</label>
+              <div class="d-flex gap-2 align-items-center">
+                <input type="number" class="form-control form-control-sm" id="price-min" placeholder="Від 0">
+                <span class="text-muted">-</span>
+                <input type="number" class="form-control form-control-sm" id="price-max" placeholder="До ...">
+              </div>
             </div>
 
             <div class="mb-3">
@@ -128,7 +141,7 @@
   <footer class="bg-dark text-white text-center py-4 mt-auto">
     <p class="mb-0">© 2025 Курсова робота. Спеціальність 125.</p>
   </footer>
-
+  
   <script type="module" src="/src/js/main.js"></script>
 </body>
 

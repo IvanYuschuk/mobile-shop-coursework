@@ -39,7 +39,15 @@ const colorMap = {
     'Ultramarine': '#3b4cca',
     'Titanium Gray': '#888888',
     'Navy': '#000080',
-    'Violet': '#ee82ee'
+    'Violet': '#ee82ee',
+    'Deep Blue': '#1a237e',       
+    'Titanium Orange': '#e65100', 
+    'Silver': '#e0e0e0',
+    'Lavender': '#dcd0ff',   // Ніжний лавандовий
+    'Mist Blue': '#b0c4de',  // Туманно-блакитний (сірувато-синій)
+    'Sage': '#9caf88',       // Шавлія (приглушений зелений)
+    'Black': '#1a1a1a',      // Глибокий чорний
+    'White': '#f8f9fa',      // Чистий білий
 };
 
 // Допоміжна функція для отримання HEX коду
@@ -62,6 +70,9 @@ async function loadProducts() {
         
         // 1. Малюємо товари
         renderProducts(allProducts);
+
+        const maxProductPrice = Math.max(...allProducts.map(p => parseFloat(p.price)));
+        document.getElementById('price-max').placeholder = `До ${maxProductPrice}`;
         
         // 2. Малюємо фільтри кольорів (на основі отриманих даних)
         renderColorFilters(allProducts);
@@ -208,10 +219,15 @@ function renderColorFilters(products) {
     });
 }
 
+
 // === 4. ЛОГІКА ФІЛЬТРАЦІЇ ===
 function applyFilters() {
     const searchText = document.getElementById('search-input').value.toLowerCase();
     const conditionValue = document.getElementById('condition-filter').value;
+    
+    // Отримуємо ціни (якщо поле пусте, беремо 0 або Нескінченність)
+    const minPrice = parseFloat(document.getElementById('price-min').value) || 0;
+    const maxPrice = parseFloat(document.getElementById('price-max').value) || Infinity;
     
     // Збираємо вибрані чекбокси
     const getCheckedValues = (cls) => Array.from(document.querySelectorAll(`${cls}:checked`)).map(cb => cb.value);
@@ -228,7 +244,7 @@ function applyFilters() {
         // 2. Бренд
         const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
 
-        // 3. Стан (Новий/Б/У)
+        // 3. Стан
         let matchesCondition = true;
         if (conditionValue !== 'all') {
             matchesCondition = (item.type === conditionValue);
@@ -246,7 +262,12 @@ function applyFilters() {
             matchesColor = item.color && selectedColors.includes(item.color);
         }
 
-        return matchesSearch && matchesBrand && matchesCondition && matchesMemory && matchesColor;
+        // 6. ЦІНА (НОВЕ!)
+        // item.price може бути рядком "100.00", тому перетворюємо в число
+        const itemPrice = parseFloat(item.price);
+        const matchesPrice = itemPrice >= minPrice && itemPrice <= maxPrice;
+
+        return matchesSearch && matchesBrand && matchesCondition && matchesMemory && matchesColor && matchesPrice;
     });
 
     renderProducts(filteredProducts);
@@ -261,7 +282,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('search-input').addEventListener('input', applyFilters);
     document.getElementById('apply-filters').addEventListener('click', applyFilters);
     document.getElementById('condition-filter').addEventListener('change', applyFilters);
-    
+    document.getElementById('price-min').addEventListener('input', applyFilters);
+    document.getElementById('price-max').addEventListener('input', applyFilters);
+
     // Слухачі для статичних чекбоксів (Бренд, Пам'ять)
     document.querySelectorAll('.filter-brand, .filter-memory').forEach(cb => {
         cb.addEventListener('change', applyFilters);
@@ -279,6 +302,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.getElementById('search-input').value = '';
         document.getElementById('condition-filter').value = 'all';
+        document.querySelectorAll('input[type=checkbox]').forEach(cb => {
+            cb.checked = false;
+            const label = document.querySelector(`label[for="${cb.id}"]`);
+            if(label) label.querySelector('.check-icon')?.classList.add('d-none');
+        });
+        document.getElementById('search-input').value = '';
+        document.getElementById('condition-filter').value = 'all';
+        
+        // ОЧИЩАЄМО ЦІНУ
+        document.getElementById('price-min').value = '';
+        document.getElementById('price-max').value = '';
+        
         applyFilters();
     });
 });
