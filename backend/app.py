@@ -82,24 +82,44 @@ def get_services():
     conn.close()
     return jsonify(items)
 
-# Загальний список (для пошуку на клієнті, якщо потрібно)
+# === ЗАГАЛЬНИЙ API ДЛЯ КЛІЄНТА (ВСЕ РАЗОМ) ===
 @app.route('/api/products', methods=['GET'])
 def get_all_products():
     conn = get_db_connection()
+    if not conn: return jsonify({'error': 'No DB'}), 500
+    
     cursor = conn.cursor(dictionary=True)
+    
+    # ВИПРАВЛЕНО: Додані всі поля (color, memory, description...), яких не вистачало
     sql = """
-        SELECT id, brand, model, image_url, price, 'NewPhone' as type FROM NewPhones
+        SELECT id, brand, model, color, memory, 'New' as condition_text, description, image_url, price, stock_quantity, 'NewPhone' as type 
+        FROM NewPhones
+        
         UNION ALL
-        SELECT id, brand, model, image_url, price, 'UsedPhone' as type FROM UsedPhones
+        
+        SELECT id, brand, model, color, memory, condition_text, description, image_url, price, stock_quantity, 'UsedPhone' as type 
+        FROM UsedPhones
+        
         UNION ALL
-        SELECT id, 'Accessory', name, image_url, price, 'Accessory' as type FROM Accessories
+        
+        SELECT id, 'Аксесуар' as brand, name as model, 'N/A' as color, 'N/A' as memory, 'New' as condition_text, description, image_url, price, stock_quantity, 'Accessory' as type 
+        FROM Accessories
+        
         UNION ALL
-        SELECT id, 'Service', name, image_url, price, 'Service' as type FROM Services
+        
+        SELECT id, 'Послуга' as brand, name as model, 'N/A' as color, 'N/A' as memory, 'N/A' as condition_text, description, image_url, price, NULL as stock_quantity, 'Service' as type 
+        FROM Services
     """
-    cursor.execute(sql)
-    res = cursor.fetchall()
-    conn.close()
-    return jsonify(res)
+    
+    try:
+        cursor.execute(sql)
+        res = cursor.fetchall()
+        return jsonify(res)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
 
 # ==========================================
 # 2. КЕРУВАННЯ ТОВАРАМИ (CRUD)
