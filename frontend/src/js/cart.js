@@ -1,4 +1,5 @@
-// frontend/src/js/cart.js
+import iziToast from "izitoast";
+import 'izitoast/dist/css/iziToast.min.css';
 
 // Ключ для збереження в LocalStorage
 const CART_KEY = 'mobi_shop_cart';
@@ -38,8 +39,14 @@ export function addToCart(product) {
     }
     
     saveCart(cart);
-    // Показуємо повідомлення (можна замінити на гарний Toast)
-    alert(`Товар "${product.model}" додано у кошик!`);
+    
+    // Красиве повідомлення замість alert
+    iziToast.success({
+        title: 'Додано!',
+        message: `Товар "${product.model}" додано у кошик`,
+        position: 'topCenter',
+        timeout: 3000
+    });
 }
 
 // === ВИДАЛИТИ ТОВАР ===
@@ -49,6 +56,13 @@ export function removeFromCart(id, type) {
     cart = cart.filter(item => !(item.id === id && item.type === type));
     saveCart(cart);
     renderCartModal(); // Перемальовуємо вікно кошика
+    
+    // Можна додати сповіщення про видалення
+    iziToast.info({
+        message: 'Товар видалено з кошика',
+        position: 'topRight',
+        timeout: 2000
+    });
 }
 
 // === ЗМІНИТИ КІЛЬКІСТЬ (+/-) ===
@@ -72,6 +86,11 @@ export function clearCart() {
     localStorage.removeItem(CART_KEY);
     updateCartCounter();
     renderCartModal();
+    
+    iziToast.info({
+        message: 'Кошик очищено',
+        position: 'topRight'
+    });
 }
 
 // === ОНОВИТИ ЛІЧИЛЬНИК У ШАПЦІ ===
@@ -99,7 +118,7 @@ export function renderCartModal() {
 
     if (cart.length === 0) {
         container.innerHTML = '<div class="text-center py-5 text-muted"><i class="fa-solid fa-basket-shopping fa-3x mb-3"></i><p>Кошик порожній</p></div>';
-        totalElem.innerText = '0 ₴';
+        if(totalElem) totalElem.innerText = '0 ₴';
         return;
     }
 
@@ -118,14 +137,14 @@ export function renderCartModal() {
                 </div>
 
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-sm btn-outline-secondary px-2" onclick="window.cartChange('${item.id}', '${item.type}', -1)">-</button>
+                    <button class="btn btn-sm btn-outline-secondary px-2" onclick="window.cartChange(${item.id}, '${item.type}', -1)">-</button>
                     <span class="mx-2 fw-bold" style="min-width: 20px; text-align: center;">${item.quantity}</span>
-                    <button class="btn btn-sm btn-outline-secondary px-2" onclick="window.cartChange('${item.id}', '${item.type}', 1)">+</button>
+                    <button class="btn btn-sm btn-outline-secondary px-2" onclick="window.cartChange(${item.id}, '${item.type}', 1)">+</button>
                 </div>
 
                 <div class="ms-3 text-end" style="min-width: 80px;">
                     <div class="fw-bold text-primary">${itemSum} ₴</div>
-                    <button class="btn btn-link text-danger p-0 small text-decoration-none" onclick="window.cartRemove('${item.id}', '${item.type}')">
+                    <button class="btn btn-link text-danger p-0 small text-decoration-none" onclick="window.cartRemove(${item.id}, '${item.type}')">
                         <small>Видалити</small>
                     </button>
                 </div>
@@ -133,5 +152,5 @@ export function renderCartModal() {
         `;
     });
 
-    totalElem.innerText = `${totalSum} ₴`;
+    if(totalElem) totalElem.innerText = `${totalSum} ₴`;
 }

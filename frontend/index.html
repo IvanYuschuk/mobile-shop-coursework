@@ -17,6 +17,10 @@
         <i class="fa-solid fa-mobile-screen-button text-primary"></i> MobiShop
       </a>
       <div class="ms-auto d-flex align-items-center gap-3">
+        <!-- Кнопка перегляду замовлень -->
+        <a href="/my-orders.html" class="btn btn-outline-light position-relative me-2" title="Мої замовлення">
+          <i class="fa-solid fa-box-open"></i>
+        </a>
         <!-- Кнопка Кошика -->
         <button class="btn btn-outline-light position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
           <i class="fa-solid fa-cart-shopping"></i> Кошик
@@ -238,7 +242,7 @@
           </div>
           <div>
             <button class="btn btn-outline-danger me-2" onclick="window.cartClear()">Очистити</button>
-            <button class="btn btn-success px-4 rounded-pill">Оформити замовлення</button>
+            <button class="btn btn-success px-4 rounded-pill"><a style="text-decoration: none; color: white;" href="./checkout.html">Оформити замовлення</a></button>
           </div>
         </div>
       </div>

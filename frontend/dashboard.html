@@ -4,11 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Адмін-панель</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Іконки FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <script>
         if (!localStorage.getItem('isAdmin')) window.location.href = '/login.html';
     </script>
@@ -16,56 +13,46 @@
 
 <body class="bg-light">
 
-    <!-- Навігація -->
-    <nav class="navbar navbar-dark bg-primary mb-4 shadow-sm">
+    <nav class="navbar navbar-dark bg-primary mb-4 shadow">
         <div class="container">
-            <span class="navbar-brand fw-bold">
-                <i class="fa-solid fa-screwdriver-wrench"></i> Адмінка MobiShop
-            </span>
+            <span class="navbar-brand fw-bold"><i class="fa-solid fa-cogs"></i> Адмінка</span>
             <div>
-                <a href="/index.html" class="btn btn-outline-light btn-sm me-2">
-                    <i class="fa-solid fa-store"></i> На сайт
-                </a>
-                <button class="btn btn-dark btn-sm" id="logout-btn">
-                    <i class="fa-solid fa-right-from-bracket"></i> Вийти
-                </button>
+                <a href="/index.html" class="btn btn-outline-light btn-sm me-2">На сайт</a>
+                <button class="btn btn-dark btn-sm" id="logout-btn">Вийти</button>
             </div>
         </div>
     </nav>
 
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Керування товарами</h2>
+            <h2>Керування магазином</h2>
             <button class="btn btn-success" onclick="openModal('add')">
                 <i class="fa-solid fa-plus"></i> Додати товар
             </button>
         </div>
 
-        <!-- Вкладки (Tabs) -->
+        <!-- Вкладки -->
         <ul class="nav nav-tabs mb-3" id="adminTabs" role="tablist">
-            <li class="nav-item">
-                <button class="nav-link active" id="phones-tab" data-bs-toggle="tab" data-bs-target="#phones-content"
-                    type="button">
-                    📱 Телефони
-                </button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" id="access-tab" data-bs-toggle="tab" data-bs-target="#access-content"
-                    type="button">
-                    🎧 Аксесуари
-                </button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" id="service-tab" data-bs-toggle="tab" data-bs-target="#service-content"
-                    type="button">
-                    🛠 Послуги
-                </button>
-            </li>
+            <!-- ТОВАРИ -->
+            <li class="nav-item"><button class="nav-link active" id="phones-tab" data-bs-toggle="tab"
+                    data-bs-target="#phones-content">📱 Телефони</button></li>
+            <li class="nav-item"><button class="nav-link" id="access-tab" data-bs-toggle="tab"
+                    data-bs-target="#access-content">🎧 Аксесуари</button></li>
+            <li class="nav-item"><button class="nav-link" id="service-tab" data-bs-toggle="tab"
+                    data-bs-target="#service-content">🛠 Послуги</button></li>
+
+            <!-- НОВІ ВКЛАДКИ -->
+            <li class="nav-item"><button class="nav-link " id="orders-tab" data-bs-toggle="tab"
+                    data-bs-target="#orders-content">📦 Замовлення</button></li>
+            <li class="nav-item"><button class="nav-link " id="order-items-tab" data-bs-toggle="tab"
+                    data-bs-target="#order-items-content">📄 Деталі (Товари)</button></li>
+            <li class="nav-item"><button class="nav-link " id="clients-tab" data-bs-toggle="tab"
+                    data-bs-target="#clients-content">👥 Клієнти</button></li>
         </ul>
 
         <!-- Вміст вкладок -->
         <div class="tab-content" id="adminTabsContent">
-            <!-- 1. Телефони -->
+            <!-- Телефони -->
             <div class="tab-pane fade show active" id="phones-content">
                 <div class="card shadow-sm border-0">
                     <table class="table table-hover align-middle mb-0">
@@ -77,15 +64,14 @@
                                 <th>Деталі</th>
                                 <th>Ціна</th>
                                 <th>Склад</th>
-                                <th class="text-end">Дії</th>
+                                <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody id="table-phones"></tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- 2. Аксесуари -->
+            <!-- Аксесуари -->
             <div class="tab-pane fade" id="access-content">
                 <div class="card shadow-sm border-0">
                     <table class="table table-hover align-middle mb-0">
@@ -97,15 +83,14 @@
                                 <th>Опис</th>
                                 <th>Ціна</th>
                                 <th>Склад</th>
-                                <th class="text-end">Дії</th>
+                                <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody id="table-accessories"></tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- 3. Послуги -->
+            <!-- Послуги -->
             <div class="tab-pane fade" id="service-content">
                 <div class="card shadow-sm border-0">
                     <table class="table table-hover align-middle mb-0">
@@ -116,31 +101,85 @@
                                 <th>Послуга</th>
                                 <th>Опис</th>
                                 <th>Ціна</th>
-                                <th class="text-end">Дії</th>
+                                <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody id="table-services"></tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- 4. ЗАМОВЛЕННЯ -->
+            <div class="tab-pane fade" id="orders-content">
+                <div class="card shadow-sm border-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>№</th>
+                                <th>Дата</th>
+                                <th>Клієнт</th>
+                                <th>Сума</th>
+                                <th>Доставка</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-orders"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5. ДЕТАЛІ ЗАМОВЛЕНЬ -->
+            <div class="tab-pane fade" id="order-items-content">
+                <div class="card shadow-sm border-0">
+                    <table class="table  table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID Замовлення</th>
+                                <th>ID Товару</th>
+                                <th>Назва Товару</th>
+                                <th>Тип</th>
+                                <th>Ціна (на момент)</th>
+                                <th>Кількість</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-order-items"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6. КЛІЄНТИ -->
+            <div class="tab-pane fade" id="clients-content">
+                <div class="card shadow-sm border-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>ПІБ</th>
+                                <th>Телефон</th>
+                                <th>Email</th>
+                                <th>Дата реєстрації</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-clients"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- МОДАЛЬНЕ ВІКНО (ADD / EDIT) -->
+    <!-- МОДАЛЬНЕ ВІКНО (Без змін, тільки для товарів) -->
     <div class="modal fade" id="editModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal-title">Додати товар</h5>
+                    <h5 class="modal-title" id="modal-title">Товар</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="product-form">
                         <input type="hidden" id="p-id">
-
-                        <!-- 1. ТИП ТОВАРУ -->
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Категорія</label>
+                            <label class="form-label fw-bold">Тип</label>
                             <select class="form-select" id="p-type" required>
                                 <option value="NewPhone">📱 Новий телефон</option>
                                 <option value="UsedPhone">♻️ Б/У телефон</option>
@@ -148,74 +187,44 @@
                                 <option value="Service">🛠 Послуга</option>
                             </select>
                         </div>
-
-                        <!-- 2. ОСНОВНІ ДАНІ -->
                         <div class="row g-2 mb-3">
-                            <!-- ID додано для JS логіки приховування -->
                             <div class="col-6" id="field-brand">
-                                <label class="form-label small">Бренд</label>
+                                <label class="small">Бренд</label>
                                 <input type="text" class="form-control" id="p-brand" placeholder="Apple">
                             </div>
                             <div class="col-6">
-                                <label class="form-label small">Назва / Модель</label>
-                                <input type="text" class="form-control" id="p-model" placeholder="iPhone 15" required>
+                                <label class="small">Модель / Назва</label>
+                                <input type="text" class="form-control" id="p-model" required>
                             </div>
                         </div>
-
-                        <!-- 3. ХАРАКТЕРИСТИКИ ТЕЛЕФОНУ (клас field-phone) -->
                         <div class="row g-2 mb-3 field-phone">
-                            <div class="col-6">
-                                <label class="form-label small">Колір</label>
-                                <input type="text" class="form-control" id="p-color" placeholder="Black">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label small">Пам'ять</label>
-                                <input type="text" class="form-control" id="p-memory" placeholder="128GB">
-                            </div>
+                            <div class="col-6"><label class="small">Колір</label><input type="text" class="form-control"
+                                    id="p-color"></div>
+                            <div class="col-6"><label class="small">Пам'ять</label><input type="text"
+                                    class="form-control" id="p-memory"></div>
                         </div>
-
-                        <!-- 4. ПАРАМЕТРИ Б/У (клас field-used) -->
-                        <div class="mb-3 bg-warning bg-opacity-10 p-2 rounded d-none field-used">
-                            <label class="form-label small fw-bold text-dark">Стан Б/У пристрою:</label>
+                        <div class="mb-3 bg-light p-2 rounded d-none field-used">
                             <div class="row g-2">
-                                <div class="col-6">
-                                    <select class="form-select form-select-sm" id="p-condition">
+                                <div class="col-6"><label class="small">Стан</label><select
+                                        class="form-select form-select-sm" id="p-condition">
                                         <option value="Як новий">Як новий</option>
                                         <option value="Хороший">Хороший</option>
                                         <option value="Нормальний">Нормальний</option>
-                                        <option value="Пошкоджений">Пошкоджений</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" class="form-control form-control-sm" id="p-battery"
-                                        placeholder="Батарея %">
-                                </div>
+                                    </select></div>
+                                <div class="col-6"><label class="small">Батарея %</label><input type="number"
+                                        class="form-control form-control-sm" id="p-battery"></div>
                             </div>
                         </div>
-
-                        <!-- 5. ЦІНА І СКЛАД -->
                         <div class="row g-2 mb-3">
-                            <div class="col-6">
-                                <label class="form-label small">Ціна (грн)</label>
-                                <input type="number" class="form-control" id="p-price" required>
-                            </div>
-                            <!-- ID додано для JS логіки приховування -->
-                            <div class="col-6" id="field-stock">
-                                <label class="form-label small">Кількість на складі</label>
-                                <input type="number" class="form-control" id="p-stock" value="1">
-                            </div>
+                            <div class="col-6"><label class="small">Ціна</label><input type="number"
+                                    class="form-control" id="p-price" required></div>
+                            <div class="col-6" id="field-stock"><label class="small">Кількість</label><input
+                                    type="number" class="form-control" id="p-stock"></div>
                         </div>
-
-                        <!-- 6. ФОТО І ОПИС -->
-                        <div class="mb-3">
-                            <label class="form-label small">URL картинки</label>
-                            <input type="text" class="form-control" id="p-image" placeholder="/images/photo.jpg">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small">Опис</label>
-                            <textarea class="form-control" id="p-desc" rows="2"></textarea>
-                        </div>
-
+                        <div class="mb-3"><label class="small">Фото URL</label><input type="text" class="form-control"
+                                id="p-image"></div>
+                        <div class="mb-3"><label class="small">Опис</label><textarea class="form-control" id="p-desc"
+                                rows="2"></textarea></div>
                         <button type="submit" class="btn btn-primary w-100">Зберегти</button>
                     </form>
                 </div>
